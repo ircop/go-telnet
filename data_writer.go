@@ -11,6 +11,7 @@ import (
 
 
 var iaciac []byte = []byte{255, 255}
+var wontlinear []byte = []byte{255,251,3,255,252,34}
 
 var errOverflow = errors.New("Overflow")
 var errPartialIACIACWrite = errors.New("Partial IAC IAC write.")
@@ -102,7 +103,9 @@ func (w *internalDataWriter) write64(data []byte) (n int64, err error) {
 	var buffer bytes.Buffer
 	for _, datum := range data {
 
-		if IAC == datum {
+		if bytes.Equal(data, wontlinear ) {
+			buffer.WriteByte(datum)
+		} else if IAC == datum {
 
 			if buffer.Len() > 0 {
 				var numWritten int64
